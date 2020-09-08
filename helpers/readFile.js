@@ -1,8 +1,7 @@
-const fs = require('fs');
+const fsPromises = require('fs').promises;
 
-const getJSONFromFile = (filePath) => {
-  const data = fs.readFileSync(filePath, { encoding: 'utf8' });
-  return JSON.parse(data);;
-};
+const getJSONFromFile = (filePath) => fsPromises.readFile(filePath, { encoding: 'utf8' })
+  .then((data) => JSON.parse(data))
+  .catch((err) => console.log(err));
 
 module.exports = getJSONFromFile;
