@@ -1,22 +1,12 @@
 const cardsRouter = require('express').Router(); // создание роутера для запроса всех карточек
-const path = require('path');
-const getJSONFromFile = require('../helpers/readFile.js');
+const {
+  getAllCards, createCard, deleteCardById, addLikeCardById, deleteLikeCardById,
+} = require('../controllers/cards');
 
-// Роутер  для запроса всех карточек
-cardsRouter.get('/', (req, res) => {
-  const filepath = path.join(__dirname, '..', 'data', 'cards.json');
-  return getJSONFromFile(filepath)
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-        return;
-      }
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-      console.log(err);
-    });
-});
+cardsRouter.get('/', getAllCards);
+cardsRouter.post('/', createCard);
+cardsRouter.put('/:cardId/likes', addLikeCardById); // поставить лайк карточке
+cardsRouter.delete('/:cardId/likes', deleteLikeCardById); // убрать лайк с карточки
+cardsRouter.delete('/:cardId', deleteCardById);
 
 module.exports = cardsRouter;
