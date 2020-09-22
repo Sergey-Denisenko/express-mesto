@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', { // подключаюс�
 
 const { PORT = 3000 } = process.env; // слущаю порт
 
-const path = require('path');
+// const path = require('path');
 const unknownPageRouter = require('express').Router(); // создаю роутер для запроса неизвестного адреса на сервере
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
@@ -37,9 +37,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/users', usersRouter); // Запуск usersRouter
 app.use('/cards', cardsRouter); // Запуск cardsRouter
-app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам//
 app.use(unknownPageRouter); // Запуск unknownPageRouter
 
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`); // Вывод в консоль порта, который слушает приложение
+  // eslint-disable-next-line no-console
+  console.log(`App listening on port ${PORT}`); // Вывод в консоль порта, кот. слушает приложение
 });

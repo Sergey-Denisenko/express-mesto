@@ -2,29 +2,33 @@ const User = require('../models/user'); // импортирую модель use
 // eslint-disable-next-line no-unused-vars
 const getAllUsers = (req, res) => { // роутер чтения документа
   User.find({}) // нахожу все пользователей
+    .orFail(new Error('GetUsersError'))
     .then((users) => {
       res.send({ data: users });
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'Not Found') {
-        return res.status(404).send({ message: 'Not Found / Пользователи не найдены' });
+      if (err.message === 'GetUsersError') {
+        res.status(404).send({ message: 'Not Found / Пользователи не найдены' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 const getUserById = (req, res) => { // роутер чтения документа
   User.findById(req.params.userId) // нахожу пользователя по запросу параметра id
-    .then((user) => {
-      res.send({ data: user });
-    })
+    .orFail(new Error('NoUserId'))
+    .then((user) => res.status(200).send({ data: user }))
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'Not Found') {
-        return res.status(404).send({ message: 'Not Found / Пользователь не найден' });
+      if (err.message === 'NoUserId') {
+        res.status(404).send({ message: 'User Id Not Found / Нет пользователя с таким Id' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -37,10 +41,11 @@ const createUser = (req, res) => { // роутер создания докуме
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'Bad Request') {
-        return res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -53,10 +58,11 @@ const updateProfileUser = (req, res) => { // роутер редактирова
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'Bad Request') {
-        return res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -69,10 +75,11 @@ const updateAvatarUser = (req, res) => { // роутер редактирова�
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'Bad Request') {
-        return res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Bad Request / Неверный запрос' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 

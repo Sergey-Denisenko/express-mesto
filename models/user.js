@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({ // Создаю схему userSchema
     type: String,
     validate: {
       validator: (v) => regex.test(v),
-      message: (props) => console.log(`${props.value} is not a valid URL!`), // console.log или alert
+      message: (props) => `${props.value} is not a valid URL!`, // console.log или alert
     },
     required: true,
   },
