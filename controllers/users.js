@@ -53,12 +53,15 @@ const updateProfileUser = (req, res) => { // роутер редактирова
   const { name, about } = req.body; // получаю из объекта запроса данные:имя,описание,avatar
   // создаю обновленный документ на основе пришедших данных
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .orFail(new Error('UpdateUserError'))
     .then((user) => {
       res.send({ data: user });
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.message === 'UpdateUserError') {
+        res.status(404).send({ message: 'Not Found / Пользователь не найден' });
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Bad Request / Неверный запрос' });
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка' });
@@ -70,12 +73,15 @@ const updateAvatarUser = (req, res) => { // роутер редактирова�
   const { avatar } = req.body; // получаю из объекта запроса данные:имя,описание,avatar
   // создаю обновленный документ на основе пришедших данных
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .orFail(new Error('UpdateUserError'))
     .then((userAvatar) => {
       res.send({ data: userAvatar });
     })
     // eslint-disable-next-line no-unused-vars
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.message === 'UpdateUserError') {
+        res.status(404).send({ message: 'Not Found / Пользователь не найден' });
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Bad Request / Неверный запрос' });
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка' });
